@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pryces</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Procurar Preços</h1>
+
+    <div class="search-container">
+    <input class="search-input" type="text"
+        name="search"
+        hx-get="/list_products"
+        hx-trigger="keyup changed delay:2000ms, search"
+        hx-target="#search"
+        hx-swap="innerHTML"
+        placeholder="Digite para pesquisar..."
+        />
+    </div>
+
+    <div id="search"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+</body>
+</html>
