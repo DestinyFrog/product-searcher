@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from thefuzz import fuzz
+
 import re
 
 class SearcherMercadoLivre(Searcher):
@@ -37,11 +39,16 @@ class SearcherMercadoLivre(Searcher):
                 str_title = title.text.replace("\n", "")
                 str_link = title.get_attribute("href")
 
+                score = fuzz.token_sort_ratio(str_title, self.search_term)
+                if score < self.min_score:
+                    continue
+
                 data.append({
                     "price": num_price,
                     "title": str_title,
                     "link": str_link,
-                    "service": self.get_service()
+                    "score": score,
+                    "service": self.get_service(),
                 })
             except:
                 pass

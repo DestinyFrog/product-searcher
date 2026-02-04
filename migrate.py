@@ -1,4 +1,4 @@
-from models.database import db
+from database import db
 from models.products import Product
 
 db.connect()

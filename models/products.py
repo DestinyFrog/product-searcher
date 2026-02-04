@@ -1,12 +1,14 @@
 from peewee import *
 
-from models.database import db
+from database import db
 
 class Product(Model):
     title = CharField()
     link = CharField()
     service = CharField()
-    price = CharField()
+    term = CharField()
+    price = DecimalField(10, 2)
+    score = IntegerField()
 
     class Meta:
         database = db

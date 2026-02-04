@@ -1,11 +1,12 @@
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
 
-from thefuzz import fuzz
+from models.products import Product
 
 class Searcher:
     def __init__(self):
         self.search_term = None
+        self.min_score = 25
+        self.products = []
 
     def set_search_term(self, search_term):
         self.search_term = search_term
@@ -14,34 +15,34 @@ class Searcher:
     def get_url(self):
         return ""
     
-    def search(self):
-        driver = None
+    def search(self, driver):
         data = None
         
         try:
             if not self.search_term:
                 raise Exception('Search term is not defined')
+            
+            if not driver:
+                driver = webdriver.Chrome()
 
-            driver = webdriver.Chrome()
             url = self.get_url()
             driver.get(url)
             data = self.search_cards(driver)
-            sorted_data_by_name = self.sort_by_name(data)
-            return sorted_data_by_name
+            self.products = data
 
         except Exception as err:
             raise err
-
-        finally:
-            if driver:
-                driver.quit()
+        return self
 
     def search_cards(self, driver):
         return None
-
-    def sort_by_name(self, data):
-        def get_score(product):
-            score = fuzz.token_sort_ratio(product['title'], self.search_term)
-            return score
-
-        return sorted(data, key=lambda product: get_score(product), reverse=True)
+    
+    def save(self):
+        for product in self.products:
+            Product.create(
+                title   = product['title'],
+                link    = product['link'],
+                service = product['service'],
+                price   = product['price'],
+                score   = product['score'],
+                term    = self.search_term)
